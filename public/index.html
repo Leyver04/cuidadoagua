@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuestionario</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script defer src="app.js"></script>
+</head>
+<body class="bg-gray-100 text-center p-10">
+  <h1 class="text-2xl font-bold mb-5">Bienvenido al Cuestionario</h1>
+  
+  <div id="start-form">
+    <input id="name" type="text" class="border-2 p-2 mb-2" placeholder="Nombre Completo" required><br>
+    <input id="group" type="text" class="border-2 p-2 mb-2" placeholder="Grupo" required><br>
+    <button id="start-btn" class="bg-blue-500 text-white p-2">Iniciar Cuestionario</button>
+  </div>
+  
+  <div id="quiz" class="hidden">
+    <h2 id="timer" class="text-lg font-semibold mb-2"></h2>
+    <div id="question-container"></div>
+    <button id="submit-btn" class="bg-green-500 text-white p-2 mt-5 hidden">Terminar</button>
+    <button id="next-btn" class="bg-blue-500 text-white p-2 mt-5 hidden">Siguiente</button>
+  </div>
+
+  <div id="result" class="hidden mt-5">
+    <h3>Resultados:</h3>
+    <p id="result-name"></p>
+    <p id="result-time"></p>
+    <p id="result-score"></p>
+  </div>
+</body>
+</html>
