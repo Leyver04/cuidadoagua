@@ -1,33 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cuestionario</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <script defer src="app.js"></script>
 </head>
-<body class="bg-gray-100 text-center p-10">
-  <h1 class="text-2xl font-bold mb-5">Bienvenido al Cuestionario</h1>
-  
-  <div id="start-form">
-    <input id="name" type="text" class="border-2 p-2 mb-2" placeholder="Nombre Completo" required><br>
-    <input id="group" type="text" class="border-2 p-2 mb-2" placeholder="Grupo" required><br>
-    <button id="start-btn" class="bg-blue-500 text-white p-2">Iniciar Cuestionario</button>
-  </div>
-  
-  <div id="quiz" class="hidden">
-    <h2 id="timer" class="text-lg font-semibold mb-2"></h2>
-    <div id="question-container"></div>
-    <button id="submit-btn" class="bg-green-500 text-white p-2 mt-5 hidden">Terminar</button>
-    <button id="next-btn" class="bg-blue-500 text-white p-2 mt-5 hidden">Siguiente</button>
-  </div>
+<body class="bg-blue-50 min-h-screen flex flex-col items-center justify-center font-sans p-6">
 
-  <div id="result" class="hidden mt-5">
-    <h3>Resultados:</h3>
-    <p id="result-name"></p>
-    <p id="result-time"></p>
-    <p id="result-score"></p>
+  <!-- Título -->
+  <h1 class="text-3xl sm:text-4xl font-bold text-blue-800 mb-8 text-center">
+    Cuidado del Agua - CECYTEM 💧
+  </h1>
+
+  <!-- Contenedor del cuestionario -->
+  <div class="flex flex-col sm:flex-row items-center justify-center bg-white rounded-2xl shadow-xl p-8 max-w-4xl w-full gap-8">
+
+    <!-- Imagen decorativa -->
+    <img src="https://cdn-icons-png.flaticon.com/512/727/727803.png" alt="Agua" class="w-40 h-40 object-contain hidden sm:block">
+
+    <!-- Formulario y cuestionario -->
+    <div class="w-full">
+      <div id="start-form" class="flex flex-col items-center">
+        <input id="name" type="text" class="w-full sm:w-80 border-2 border-blue-300 rounded p-2 mb-3" placeholder="Nombre Completo" required>
+        <input id="group" type="text" class="w-full sm:w-80 border-2 border-blue-300 rounded p-2 mb-3" placeholder="Grupo" required>
+        <button id="start-btn" class="w-full sm:w-80 bg-blue-600 text-white rounded p-2 hover:bg-blue-700 transition">Iniciar Cuestionario</button>
+      </div>
+
+      <div id="quiz" class="hidden mt-6">
+        <h2 id="timer" class="text-lg font-semibold text-red-600 mb-4 text-center"></h2>
+        <div id="question-container" class="mb-4 text-left"></div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+          <button id="submit-btn" class="bg-green-600 text-white p-2 rounded hidden hover:bg-green-700 transition">Terminar</button>
+          <button id="next-btn" class="bg-blue-600 text-white p-2 rounded hidden hover:bg-blue-700 transition">Siguiente</button>
+        </div>
+      </div>
+
+      <div id="result" class="hidden mt-6 text-center">
+        <h3 class="text-xl font-bold text-blue-700 mb-3">Resultados:</h3>
+        <p id="result-name" class="text-gray-800"></p>
+        <p id="result-time" class="text-gray-800"></p>
+        <p id="result-score" class="text-gray-800"></p>
+      </div>
+    </div>
   </div>
 </body>
 </html>
