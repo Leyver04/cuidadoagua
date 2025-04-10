@@ -87,7 +87,6 @@ const questions = [
   }
 ];
 
-
 let currentQuestion = 0;
 let score = 0;
 let startTime;
@@ -109,24 +108,26 @@ function loadQuestion() {
   const question = questions[currentQuestion];
 
   questionContainer.innerHTML = `
-    <h3>${question.question}</h3>
-    ${question.options.map(option => `
-      <label>
-        <input type="radio" name="option" value="${option}">
-        ${option}
-      </label><br>
-    `).join('')}
+    <div class="bg-white shadow-md rounded-xl p-5 max-w-2xl mx-auto">
+      <h3 class="text-xl font-semibold mb-4 text-blue-800">${question.question}</h3>
+      <div class="flex flex-col gap-3">
+        ${question.options.map(option => `
+          <label class="flex items-center gap-2 border border-gray-300 rounded-lg p-2 hover:bg-blue-50 cursor-pointer transition">
+            <input type="radio" name="option" value="${option}" class="accent-blue-600">
+            <span class="text-gray-700">${option}</span>
+          </label>
+        `).join('')}
+      </div>
+    </div>
   `;
 
-  // Reiniciar botones y temporizador
   nextBtn.classList.add('hidden');
   submitBtn.classList.add('hidden');
   clearInterval(timer);
   timeLeft = 15;
-  timerDisplay.textContent = `Tiempo restante: ${timeLeft}s`;
+  timerDisplay.textContent = `⏳ Tiempo restante: ${timeLeft}s`;
   timer = setInterval(updateTimer, 1000);
 
-  // Escuchar selección de opción
   const options = document.querySelectorAll('input[name="option"]');
   options.forEach(option => {
     option.addEventListener('change', () => {
@@ -151,7 +152,7 @@ function loadQuestion() {
 
 function updateTimer() {
   timeLeft--;
-  timerDisplay.textContent = `Tiempo restante: ${timeLeft}s`;
+  timerDisplay.textContent = `⏳ Tiempo restante: ${timeLeft}s`;
 
   if (timeLeft <= 0) {
     clearInterval(timer);
