@@ -108,17 +108,13 @@ function loadQuestion() {
   const question = questions[currentQuestion];
 
   questionContainer.innerHTML = `
-    <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-3xl mx-auto transition-all duration-300">
-      <h3 class="text-2xl font-bold text-blue-700 mb-6 text-center">${question.question}</h3>
-      <div class="grid gap-4">
-        ${question.options.map(option => `
-          <label class="flex items-center gap-3 border-2 border-gray-300 rounded-xl px-4 py-3 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all duration-200">
-            <input type="radio" name="option" value="${option}" class="accent-blue-600 w-5 h-5">
-            <span class="text-gray-800 text-lg">${option}</span>
-          </label>
-        `).join('')}
-      </div>
-    </div>
+    <h3 class="text-xl font-bold mb-4">${question.question}</h3>
+    ${question.options.map(option => `
+      <label class="block mb-2">
+        <input type="radio" name="option" value="${option}" class="mr-2">
+        <span class="text-gray-800">${option}</span>
+      </label>
+    `).join('')}
   `;
 
   nextBtn.classList.add('hidden');
@@ -189,9 +185,37 @@ function showResult(timeTaken) {
   const name = nameInput.value;
   const group = groupInput.value;
 
-  document.getElementById('result-name').textContent = `Nombre: ${name}`;
-  document.getElementById('result-time').textContent = `Tiempo: ${timeTaken} segundos`;
-  document.getElementById('result-score').textContent = `Aciertos: ${score} de ${questions.length}`;
+  const percentage = (score / questions.length) * 100;
+
+  let message = "";
+  let emoji = "🌊";
+  if (percentage === 100) {
+    message = "¡Excelente! Eres un maestro del agua 💧👏";
+    emoji = "🏆";
+  } else if (percentage >= 80) {
+    message = "¡Muy bien! Vas por buen camino 💪";
+    emoji = "🎉";
+  } else if (percentage >= 60) {
+    message = "¡Bien hecho! Pero aún puedes mejorar 🤓";
+    emoji = "📘";
+  } else {
+    message = "Ups... a estudiar un poquito más sobre el agua 💦📘";
+    emoji = "💧";
+  }
+
+  resultContainer.innerHTML = `
+    <div class="bg-white rounded-2xl shadow-2xl p-8 text-center">
+      <div class="text-6xl mb-4 text-yellow-500">${emoji}</div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">¡Resultados del Cuestionario!</h2>
+      <p class="text-lg mb-2 font-medium text-blue-700">Nombre: ${name} (${group})</p>
+      <p class="text-lg mb-2 text-gray-600">Tiempo: ${timeTaken} segundos</p>
+      <p class="text-xl mb-4 font-semibold text-green-600">Aciertos: ${score} de ${questions.length}</p>
+      <p class="text-base text-gray-700 italic mb-6">${message}</p>
+      <button onclick="location.reload()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+        Volver a intentar
+      </button>
+    </div>
+  `;
 
   saveResult(name, group, score, timeTaken);
 }
