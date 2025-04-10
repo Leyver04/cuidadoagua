@@ -108,13 +108,13 @@ function loadQuestion() {
   const question = questions[currentQuestion];
 
   questionContainer.innerHTML = `
-    <div class="bg-white shadow-md rounded-xl p-5 max-w-2xl mx-auto">
-      <h3 class="text-xl font-semibold mb-4 text-blue-800">${question.question}</h3>
-      <div class="flex flex-col gap-3">
+    <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-3xl mx-auto transition-all duration-300">
+      <h3 class="text-2xl font-bold text-blue-700 mb-6 text-center">${question.question}</h3>
+      <div class="grid gap-4">
         ${question.options.map(option => `
-          <label class="flex items-center gap-2 border border-gray-300 rounded-lg p-2 hover:bg-blue-50 cursor-pointer transition">
-            <input type="radio" name="option" value="${option}" class="accent-blue-600">
-            <span class="text-gray-700">${option}</span>
+          <label class="flex items-center gap-3 border-2 border-gray-300 rounded-xl px-4 py-3 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all duration-200">
+            <input type="radio" name="option" value="${option}" class="accent-blue-600 w-5 h-5">
+            <span class="text-gray-800 text-lg">${option}</span>
           </label>
         `).join('')}
       </div>
