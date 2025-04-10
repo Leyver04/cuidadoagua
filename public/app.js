@@ -98,6 +98,7 @@ startBtn.addEventListener('click', startQuiz);
 
 function startQuiz() {
   startForm.classList.add('hidden');
+  document.getElementById('instructions').classList.add('hidden'); // Oculta las instrucciones
   quizContainer.classList.remove('hidden');
   startTime = Date.now();
   loadQuestion();
