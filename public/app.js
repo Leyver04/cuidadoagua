@@ -91,7 +91,7 @@ let currentQuestion = 0;
 let score = 0;
 let startTime;
 let timer;
-let timeLeft = 15;
+let timeLeft = 10;
 let questionAnswered = false;
 
 startBtn.addEventListener('click', startQuiz);
@@ -124,7 +124,7 @@ function loadQuestion() {
   nextBtn.classList.add('hidden');
   submitBtn.classList.add('hidden');
   clearInterval(timer);
-  timeLeft = 15;
+  timeLeft = 10;
   timerDisplay.textContent = `⏳ Tiempo restante: ${timeLeft}s`;
   timer = setInterval(updateTimer, 1000);
 
