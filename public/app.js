@@ -216,7 +216,7 @@ function loadQuestion() {
   nextBtn.classList.add("hidden")
   submitBtn.classList.add("hidden")
   clearInterval(timer)
-  timeLeft = 10
+  timeLeft = 20
   updateTimerDisplay()
   timer = setInterval(updateTimer, 1000)
 
