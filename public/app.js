@@ -156,7 +156,7 @@ let currentQuestion = 0
 let score = 0
 let startTime
 let timer
-let timeLeft = 10
+let timeLeft = 20
 let questionAnswered = false
 
 startBtn.addEventListener("click", startQuiz)
