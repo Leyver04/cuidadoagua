@@ -18,14 +18,14 @@
   <div class="flex flex-col sm:flex-row items-center justify-center bg-white rounded-2xl shadow-xl p-8 max-w-4xl w-full gap-8">
 
     <!-- Imagen decorativa -->
-    <img src="gota-Photoroom.png" alt="Agua" class="w-90 h-80 object-contain hidden sm:block">
+    <img src="gota-Photoroom.png" alt="Agua" class="w-100 h-80 object-contain hidden sm:block">
     
     <!-- Formulario y cuestionario -->
     <div class="w-full">
       <!-- Instrucciones para el inicio del cuestionario -->
       <div id="instructions" class="w-full text-center mb-4">
         <h3 class="text-xl font-semibold text-blue-600">Instrucciones:</h3>
-        <p class="text-gray-700">Si consigues mas de 12 aciertos podras ganar un ducle. Intentalo!!!</p>
+        <p class="text-gray-700">Contesta el cuestionario. <br>Si consigues mas de 13 aciertos podras ganar un 🍬. Intentalo!!!</p>
       </div>
   
       <div id="start-form" class="flex flex-col items-center">
@@ -48,6 +48,80 @@
         <p id="result-name" class="text-gray-800"></p>
         <p id="result-time" class="text-gray-800"></p>
         <p id="result-score" class="text-gray-800"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de felicitaciones -->
+  <div id="congratulations-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+    <div class="relative max-w-md w-full bg-white rounded-3xl shadow-2xl transform transition-all duration-500 scale-95" id="modal-content">
+      <!-- Botón cerrar -->
+      <button id="close-modal" class="absolute top-4 right-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 z-10">
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <div class="p-8 text-center relative overflow-hidden">
+        <!-- Elementos decorativos de fondo -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div class="absolute -top-4 -left-4 w-20 h-20 bg-yellow-200 rounded-full opacity-20 animate-pulse"></div>
+          <div class="absolute -top-2 -right-6 w-16 h-16 bg-purple-200 rounded-full opacity-20 animate-pulse" style="animation-delay: 0.3s;"></div>
+          <div class="absolute -bottom-4 -left-6 w-24 h-24 bg-blue-200 rounded-full opacity-20 animate-pulse" style="animation-delay: 0.5s;"></div>
+          <div class="absolute -bottom-2 -right-4 w-18 h-18 bg-pink-200 rounded-full opacity-20 animate-pulse" style="animation-delay: 0.7s;"></div>
+        </div>
+
+        <!-- Icono principal -->
+        <div class="relative mb-6">
+          <div id="main-icon" class="inline-flex items-center justify-center w-20 h-20 rounded-full shadow-lg animate-bounce text-4xl">
+            <!-- El icono se llenará dinámicamente -->
+          </div>
+
+          <!-- Estrellas decorativas -->
+          <div class="absolute -top-2 -left-2 w-6 h-6 text-yellow-400" style="animation: spin 3s linear infinite;">⭐</div>
+          <div class="absolute -top-1 -right-3 w-5 h-5 text-purple-400 animate-pulse">✨</div>
+          <div class="absolute -bottom-1 -left-3 w-5 h-5 text-orange-400 animate-bounce" style="animation-delay: 0.2s;">🏆</div>
+        </div>
+
+        <!-- Título -->
+        <h2 id="modal-title" class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+          <!-- El título se llenará dinámicamente -->
+        </h2>
+
+        <!-- Mensaje -->
+        <p id="modal-message" class="text-gray-600 text-lg mb-2 leading-relaxed">
+          <!-- El mensaje se llenará dinámicamente -->
+        </p>
+
+        <p id="modal-submessage" class="text-gray-500 text-sm mb-6">
+          <!-- El submensaje se llenará dinámicamente -->
+        </p>
+
+        <!-- Estadísticas decorativas -->
+        <div class="flex justify-center space-x-6 mb-6">
+          <div class="text-center">
+            <div id="score-percentage" class="text-2xl font-bold text-green-600">0%</div>
+            <div class="text-xs text-gray-500">Aciertos</div>
+          </div>
+          <div class="text-center">
+            <div id="performance-icon" class="text-2xl font-bold text-blue-600">⭐</div>
+            <div class="text-xs text-gray-500" id="performance-text">Excelente</div>
+          </div>
+          <div class="text-center">
+            <div id="reward-icon" class="text-2xl font-bold text-purple-600">🎉</div>
+            <div class="text-xs text-gray-500" id="reward-text">¡Logrado!</div>
+          </div>
+        </div>
+
+        <!-- Botón de acción -->
+        <button id="continue-btn" class="w-full font-semibold py-3 rounded-full shadow-lg transform transition-all duration-200 hover:scale-105">
+          <!-- El texto del botón se llenará dinámicamente -->
+        </button>
+
+        <!-- Confetti effect -->
+        <div class="absolute inset-0 pointer-events-none" id="confetti-container">
+          <!-- El confetti se generará dinámicamente -->
+        </div>
       </div>
     </div>
   </div>
