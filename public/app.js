@@ -166,7 +166,8 @@ function startQuiz() {
   const group = groupInput.value.trim()
 
   if (!name || !group) {
-    alert("Por favor, completa tu nombre y grupo antes de iniciar.")
+    // Alerta mejorada
+    showCustomAlert("⚠️ Por favor, completa tu nombre y grupo antes de iniciar.", "warning")
     return
   }
 
@@ -182,15 +183,28 @@ function loadQuestion() {
   const question = questions[currentQuestion]
 
   questionContainer.innerHTML = `
-    <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-3xl mx-auto transition-all duration-300">
-      <h3 class="text-2xl font-bold text-blue-700 mb-6 text-center">${question.question}</h3>
+    <div class="question-card bg-white/95 backdrop-blur shadow-2xl rounded-3xl p-8 max-w-4xl mx-auto transition-all duration-300 hover:shadow-blue-500/20 border border-white/50">
+      <div class="flex items-center justify-center mb-6">
+        <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg shadow-lg">
+          ${currentQuestion + 1}
+        </div>
+      </div>
+      <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8 text-center leading-relaxed">${question.question}</h3>
       <div class="grid gap-4">
         ${question.options
           .map(
-            (option) => `
-          <label class="flex items-center gap-3 border-2 border-gray-300 rounded-xl px-4 py-3 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all duration-200">
-            <input type="radio" name="option" value="${option}" class="accent-blue-600 w-5 h-5">
-            <span class="text-gray-800 text-lg">${option}</span>
+            (option, index) => `
+          <label class="group flex items-center gap-4 border-2 border-gray-200 rounded-2xl px-6 py-4 cursor-pointer hover:border-blue-500 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] transform">
+            <div class="relative">
+              <input type="radio" name="option" value="${option}" class="sr-only">
+              <div class="w-6 h-6 border-2 border-gray-300 rounded-full group-hover:border-blue-500 transition-colors duration-200 flex items-center justify-center">
+                <div class="w-3 h-3 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+              </div>
+            </div>
+            <span class="text-gray-700 text-lg font-medium group-hover:text-gray-900 flex-1">${option}</span>
+            <div class="text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              ${["🔵", "🟢", "🟡", "🟠"][index] || "🔵"}
+            </div>
           </label>
         `,
           )
@@ -203,26 +217,54 @@ function loadQuestion() {
   submitBtn.classList.add("hidden")
   clearInterval(timer)
   timeLeft = 10
-  timerDisplay.textContent = `⏳ Tiempo restante: ${timeLeft}s`
+  updateTimerDisplay()
   timer = setInterval(updateTimer, 1000)
 
   const options = document.querySelectorAll('input[name="option"]')
-  options.forEach((option) => {
+  options.forEach((option, index) => {
     option.addEventListener("change", () => {
       if (!questionAnswered) {
         questionAnswered = true
         clearInterval(timer)
+
+        // Efecto visual de selección
+        const labels = document.querySelectorAll("label")
+        labels.forEach((label) => {
+          label.classList.remove(
+            "hover:border-blue-500",
+            "hover:bg-gradient-to-r",
+            "hover:from-blue-50",
+            "hover:to-purple-50",
+          )
+          if (label.contains(option)) {
+            label.classList.add(
+              "border-blue-500",
+              "bg-gradient-to-r",
+              "from-blue-100",
+              "to-purple-100",
+              "shadow-lg",
+              "scale-[1.02]",
+            )
+            const circle = label.querySelector("div > div")
+            circle.classList.remove("opacity-0")
+            circle.classList.add("opacity-100")
+          } else {
+            label.classList.add("opacity-50")
+          }
+        })
 
         const selected = document.querySelector('input[name="option"]:checked')
         if (selected && selected.value === questions[currentQuestion].answer) {
           score++
         }
 
-        if (currentQuestion === questions.length - 1) {
-          submitBtn.classList.remove("hidden")
-        } else {
-          nextBtn.classList.remove("hidden")
-        }
+        setTimeout(() => {
+          if (currentQuestion === questions.length - 1) {
+            submitBtn.classList.remove("hidden")
+          } else {
+            nextBtn.classList.remove("hidden")
+          }
+        }, 1000)
       }
     })
   })
@@ -230,7 +272,7 @@ function loadQuestion() {
 
 function updateTimer() {
   timeLeft--
-  timerDisplay.textContent = `⏳ Tiempo restante: ${timeLeft}s`
+  updateTimerDisplay()
 
   if (timeLeft <= 0) {
     clearInterval(timer)
@@ -243,6 +285,23 @@ function updateTimer() {
         loadQuestion()
       }
     }
+  }
+}
+
+function updateTimerDisplay() {
+  const timerText = document.getElementById("timer-text") || timerDisplay
+  timerText.textContent = `Tiempo restante: ${timeLeft}s`
+
+  // Cambiar color según el tiempo restante
+  if (timeLeft <= 3) {
+    timerDisplay.className =
+      "inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-red-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg animate-pulse"
+  } else if (timeLeft <= 5) {
+    timerDisplay.className =
+      "inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg"
+  } else {
+    timerDisplay.className =
+      "inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg"
   }
 }
 
@@ -267,16 +326,18 @@ function showResult(timeTaken) {
   const name = nameInput.value
   const group = groupInput.value
 
-  document.getElementById("result-name").textContent = `Nombre: ${name}`
-  document.getElementById("result-time").textContent = `Tiempo: ${timeTaken} segundos`
-  document.getElementById("result-score").textContent = `Aciertos: ${score} de ${questions.length}`
+  document.getElementById("result-name").innerHTML = `<span class="text-blue-200">👤</span> <strong>${name}</strong>`
+  document.getElementById("result-time").innerHTML =
+    `<span class="text-blue-200">⏱️</span> <strong>${timeTaken}</strong> segundos`
+  document.getElementById("result-score").innerHTML =
+    `<span class="text-blue-200">🎯</span> <strong>${score}</strong> de <strong>${questions.length}</strong> aciertos`
 
   saveResult(name, group, score, timeTaken)
 
   // Mostrar la alerta de felicitaciones después de un breve delay
   setTimeout(() => {
     showCongratulationsModal(name, score, timeTaken)
-  }, 1000)
+  }, 1500)
 }
 
 function showCongratulationsModal(name, score, timeTaken) {
@@ -301,48 +362,66 @@ function showCongratulationsModal(name, score, timeTaken) {
     modalMessage.textContent = `¡Excelente trabajo, ${name}!`
     modalSubmessage.textContent = `Has obtenido ${score} aciertos de ${questions.length}. ¡Te has ganado tu dulce! 🍬`
     mainIcon.className =
-      "inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full shadow-lg animate-bounce text-4xl"
+      "inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full shadow-2xl animate-bounce text-5xl"
     mainIcon.textContent = "✅"
     performanceIcon.textContent = "🍬"
     performanceText.textContent = "¡Dulce ganado!"
     rewardIcon.textContent = "🏆"
     rewardText.textContent = "¡Excelente!"
     continueButton.className =
-      "w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-full shadow-lg transform transition-all duration-200 hover:scale-105"
-    continueButton.textContent = "¡Genial, continuar! 🍬"
+      "w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-105 text-lg relative overflow-hidden"
+    continueButton.innerHTML = `
+      <span class="relative z-10 flex items-center justify-center gap-3">
+        <span>🍬</span>
+        ¡Genial, continuar!
+        <span>🎉</span>
+      </span>
+    `
   } else if (score >= 10) {
     modalTitle.textContent = "¡Muy bien! 👏"
     modalMessage.textContent = `¡Buen trabajo, ${name}!`
     modalSubmessage.textContent = `Has obtenido ${score} aciertos de ${questions.length}. ¡Sigue así!`
     mainIcon.className =
-      "inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full shadow-lg animate-bounce text-4xl"
+      "inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full shadow-2xl animate-bounce text-5xl"
     mainIcon.textContent = "👍"
     performanceIcon.textContent = "⭐"
     performanceText.textContent = "Muy bien"
     rewardIcon.textContent = "💪"
     rewardText.textContent = "¡Sigue así!"
     continueButton.className =
-      "w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-full shadow-lg transform transition-all duration-200 hover:scale-105"
-    continueButton.textContent = "¡Continuar!"
+      "w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-105 text-lg relative overflow-hidden"
+    continueButton.innerHTML = `
+      <span class="relative z-10 flex items-center justify-center gap-3">
+        <span>👏</span>
+        ¡Continuar!
+        <span>⭐</span>
+      </span>
+    `
   } else {
     modalTitle.textContent = "¡Buen intento! 💪"
     modalMessage.textContent = `¡No te rindas, ${name}!`
     modalSubmessage.textContent = `Has obtenido ${score} aciertos de ${questions.length}. ¡Puedes mejorar!`
     mainIcon.className =
-      "inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full shadow-lg animate-bounce text-4xl"
+      "inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full shadow-2xl animate-bounce text-5xl"
     mainIcon.textContent = "💪"
     performanceIcon.textContent = "📚"
     performanceText.textContent = "A estudiar"
     rewardIcon.textContent = "🎯"
     rewardText.textContent = "¡Inténtalo!"
     continueButton.className =
-      "w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 rounded-full shadow-lg transform transition-all duration-200 hover:scale-105"
-    continueButton.textContent = "¡Intentar de nuevo!"
+      "w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-105 text-lg relative overflow-hidden"
+    continueButton.innerHTML = `
+      <span class="relative z-10 flex items-center justify-center gap-3">
+        <span>💪</span>
+        ¡Intentar de nuevo!
+        <span>📚</span>
+      </span>
+    `
   }
 
   scorePercentage.textContent = `${percentage}%`
 
-  // Generar confetti
+  // Generar confetti mejorado
   generateConfetti()
 
   // Mostrar el modal con animación
@@ -357,22 +436,23 @@ function generateConfetti() {
   const confettiContainer = document.getElementById("confetti-container")
   confettiContainer.innerHTML = ""
 
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 20; i++) {
     const confetti = document.createElement("div")
-    confetti.className = "absolute w-2 h-2 rounded-full animate-bounce"
+    confetti.className = "absolute w-3 h-3 rounded-full animate-bounce"
 
     const colors = [
       "bg-gradient-to-r from-yellow-400 to-orange-400",
       "bg-gradient-to-r from-pink-400 to-red-400",
       "bg-gradient-to-r from-blue-400 to-purple-400",
       "bg-gradient-to-r from-green-400 to-emerald-400",
+      "bg-gradient-to-r from-purple-400 to-pink-400",
     ]
 
-    confetti.className += ` ${colors[i % 4]}`
+    confetti.className += ` ${colors[i % 5]}`
     confetti.style.left = `${Math.random() * 100}%`
     confetti.style.top = `${Math.random() * 100}%`
     confetti.style.animationDelay = `${Math.random() * 2}s`
-    confetti.style.animationDuration = `${1 + Math.random()}s`
+    confetti.style.animationDuration = `${0.8 + Math.random() * 0.4}s`
 
     confettiContainer.appendChild(confetti)
   }
@@ -397,16 +477,7 @@ function closeCongratulationsModal() {
 }
 
 function saveResult(name, group, score, timeTaken) {
-  // Comentado para evitar errores en Render si no tienes backend
-  /*
-  fetch("/api/guardar-resultados", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, group, score, timeTaken }),
-  });
-  */
-
-  // Opcional: guardar en localStorage como alternativa
+  // Opcional: guardar en localStorage
   const result = {
     name,
     group,
@@ -418,4 +489,35 @@ function saveResult(name, group, score, timeTaken) {
   const results = JSON.parse(localStorage.getItem("quizResults") || "[]")
   results.push(result)
   localStorage.setItem("quizResults", JSON.stringify(results))
+}
+
+function showCustomAlert(message, type = "info") {
+  const alertDiv = document.createElement("div")
+  alertDiv.className = `fixed top-4 right-4 z-50 p-4 rounded-2xl shadow-2xl transform transition-all duration-300 translate-x-full`
+
+  if (type === "warning") {
+    alertDiv.className += " bg-gradient-to-r from-orange-500 to-red-500 text-white"
+  } else {
+    alertDiv.className += " bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+  }
+
+  alertDiv.innerHTML = `
+    <div class="flex items-center gap-3">
+      <span class="text-xl">${type === "warning" ? "⚠️" : "ℹ️"}</span>
+      <span class="font-medium">${message}</span>
+    </div>
+  `
+
+  document.body.appendChild(alertDiv)
+
+  setTimeout(() => {
+    alertDiv.classList.remove("translate-x-full")
+  }, 100)
+
+  setTimeout(() => {
+    alertDiv.classList.add("translate-x-full")
+    setTimeout(() => {
+      document.body.removeChild(alertDiv)
+    }, 300)
+  }, 3000)
 }
